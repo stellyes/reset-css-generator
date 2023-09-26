@@ -1,6 +1,18 @@
 import os
-import time
+import cssutils
 from bs4 import BeautifulSoup
+
+HEADER = '''
+    /*\n 
+        Script by Ryan England - Github: stellyes\n \
+        https://github.com/stellyes/reset-css-generator \n \
+                
+        \nTemplate for reset.css information: \n\
+        http://meyerweb.com/eric/tools/css/reset/\n \
+        v2.0 | 20110126\n \
+        License: none (public domain)\n \
+    */\n\n
+'''
 
 # The baseline tags to be modified by the BASELINE_CSS global
 BASELINE_TAGS = ["html", "body", "div", "span", "applet", "object", "iframe", "h1", "h2",
@@ -74,27 +86,13 @@ TABLE_BORDER_CSS = '''
                     border-spacing: 0;
                     }
                 '''
-
-
-def generateHeader(current_time):
-    '''
-    Takes in time.asctime object and generates a string to append to the 
-    beginning of the reset.css file
-    '''
-    return "/*\n reset.css file generated on " + current_time + "\n\
-            Script by Ryan England - Github: stellyes \n\
-            \nTemplate for reset.css information: \n\
-            http://meyerweb.com/eric/tools/css/reset/\n \
-            v2.0 | 20110126\n \
-            License: none (public domain)\n \
-            */\n\n"
     
 def buildTagList(tagList):
 
     tag_list_string = ""
     for tag in tagList:
         if tag is not tagList[len(tagList) - 1]:
-            tag_list_string += tag + ",\n"
+            tag_list_string += tag + ",\n "
         else:
             tag_list_string += tag 
 
@@ -104,10 +102,11 @@ def main():
 
     # Gather relative filepath to HTML doc from user
     print()
-    filePath = input("Please enter relative file path to HTML document you wish to create a reset.css file for: ")
+    filePath = os.path.abspath("../../02-challenges/web-resume/index.html")
+    #input("Please enter relative file path to HTML document you wish to create a reset.css file for: ")
 
-    while not os.path.exists(filePath):
-        filePath = input("Invalid file path. Please try again: ")
+    #while not os.path.exists(filePath):
+        #filePath = input("Invalid file path. Please try again: ")
 
     with open(filePath) as doc:
         soup = BeautifulSoup(doc, "html.parser")
@@ -119,15 +118,11 @@ def main():
     # Grab all HTML tags from document
     tagList = []
     for tag in soup.find_all(True):
-        tagList.append(tag)
+        if tag.name not in tagList:
+            tagList.append(tag.name)
 
     # Remove duplicate tags in list
     tagList = list(set(tagList))
-
-    # Format current time for file output
-    current_time = str(time.asctime).replace(" ", "_")
-    current_time = current_time.replace(":", "-")
-    fileName = "output/reset_" + current_time + ".txt"
 
     # Initialized empty arrays to store corresponding and present tags
     # from HTML document. line_height_compare and table_compare are boolean
@@ -139,6 +134,8 @@ def main():
     quote_compare = []
     table_compare = False
 
+    # Building out css file by testing for tags in each
+    # serction of the reference document
     for tag in tagList:
         if tag in BASELINE_TAGS:
             baseline_compare.append(tag)
@@ -153,39 +150,39 @@ def main():
         elif tag in TABLE_BORDER_TAGS:
             table_compare = True
 
-    with open(fileName, 'w') as file:
-        # Write header to file
-        file.write(generateHeader(current_time)) 
+    # Writing structured css to file
+    css_string = HEADER
 
-        if baseline_compare != []:
-            file.write(buildTagList(baseline_compare))
-            file.write(BASELINE_CSS)
-            file.write("\n\n")
+    if baseline_compare != []:
+        css_string += buildTagList(baseline_compare) + BASELINE_CSS + "\n\n"
 
-        if display_compare != []:
-            file.write(buildTagList(display_compare))
-            file.write(DISPLAY_CSS_DEPRECATED_BROWSERS)
-            file.write("\n\n")
-        
-        if line_height_compare:
-            file.write("body ")
-            file.write(LINE_HEIGHT_CSS)
-            file.write("\n\n")
+    if display_compare != []:
+        css_string += buildTagList(display_compare) + DISPLAY_CSS_DEPRECATED_BROWSERS + "\n\n"
+    
+    if line_height_compare:
+        css_string += "body " + LINE_HEIGHT_CSS + "\n\n"
 
-        if quote_compare != []:
-            file.write(buildTagList(quote_compare))
-            file.write(QUOTE_CSS)
-            file.write("/n/n")
-            for tag in quote_compare:
-                if len(quote_compare) == 1:
-                    file.write(quote_compare[0] + ":before, \n" + quote_compare[0] + ":after ")
-                else:
-                    file.write(quote_compare[0] + ":before, \n" + quote_compare[0] + ":after, \n " + \
-                               quote_compare[1] + ":before, \n" + quote_compare[0] + ":after ")
-            file.write(QUOTE_PSEUDO_CSS)
-            file.write("\n\n")
+    if quote_compare != []:
+        css_string += buildTagList(quote_compare) + QUOTE_CSS + "/n/n"
+        for tag in quote_compare:
+            if len(quote_compare) == 1:
+                css_string += quote_compare[0] + ":before, \n" + quote_compare[0] + ":after "
+            else:
+                css_string += quote_compare[0] + ":before, \n" + quote_compare[0] + ":after, \n " + \
+                            quote_compare[1] + ":before, \n" + quote_compare[0] + ":after "
+        css_string += QUOTE_PSEUDO_CSS
+        css_string += "\n\n"
 
-        if table_compare:
-            file.write("table ")
-            file.write(TABLE_BORDER_CSS)
+    if table_compare:
+        css_string += "table "
+        css_string += TABLE_BORDER_CSS
 
+    css_code = cssutils.parseString(css_string)
+    with open("reset.css", "w") as css:
+        css.write(str(css_code.cssText.decode('ascii')))
+
+    print("reset.css file generated! Please refer to reset.css in this directory and copy into your document.")
+
+
+if __name__ == "__main__":
+    main()

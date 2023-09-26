@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <title>Ryan England</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+  </head>
+  <body>
+    <header>
+      <!--the menu class is in charge of the navigation panel
+          the title-card class is responsible for the background image-->
+      <div
+        class="menu title-card"
+        title="Clouds over Camarillo, CA"
+        alt="Clouds over Camarillo, CA, photo by Ryan England"
+      >
+        <nav>
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#project-section">Projects</a></li>
+            <li>
+              <img
+                class="home-icon"
+                src="assets/home-outline-black.png"
+                alt="Outline of a home."
+              />
+            </li>
+            <li><a href="#about-section">About</a></li>
+            <li><a href="#contact-me">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <!--Project section intends to define a list of most recent projects displayed as a list
+        of flex items-->
+      <div id="project-section">
+        <!--In the chrome devtools, this displays properly. It does not retain
+        its orientation when deployed on github pages. -->
+        <aside class="project-title"><h2>PROJECTS</h2></aside>
+        <div class="project-content">
+          <!--Each list item contains
+              - <h3> as the project title
+              - <article> which contains all of the (hidden until hover) info
+                about the project
+                  - <p> is the description of the project
+                  - <a> is a button to redirect the user to the project
+          -->
+          <ul>
+            <li class="slide">
+              <h3>horiseon-rafactor</h3>
+              <article class="description box">
+                <p>
+                  This landing page for the Horiseon website needed refactoring
+                  to improve accessibility and readability within the codebase.
+                </p>
+                <a href="https://github.com/stellyes/horiseon-refactor"
+                  >VISIT</a
+                >
+              </article>
+            </li>
+            <li class="slide">
+              <h3>spoticry</h3>
+              <article class="description box">
+                <p>
+                  Python 3.9 application - Spotify data collection and mapping
+                  through web automation.
+                </p>
+                <a href="https://github.com/stellyes/spoticry">VISIT</a>
+              </article>
+            </li>
+            <li class="slide">
+              <h3>web-resume</h3>
+              <article class="description box">
+                <p>
+                  A virtual resume to display my latest front-end expertise.
+                </p>
+                <a href="https://github.com/stellyes/web-resume">VISIT</a>
+              </article>
+            </li>
+            <li class="slide">
+              <h3>spotify-distrokid-link</h3>
+              <article class="description box">
+                <p>
+                  Python script utilizing Selenium to automate a Distrokid
+                  service.
+                </p>
+                <a href="https://github.com/stellyes/spotify-distrokid-link"
+                  >VISIT</a
+                >
+              </article>
+            </li>
+            <li class="slide">
+              <h3>anxietysim</h3>
+              <article class="description box">
+                <p>
+                  It's an anxiety choose-your-own-adventure, text-based game.
+                </p>
+                <a href="https://github.com/stellyes/anxietysim">VISIT</a>
+              </article>
+            </li>
+            <li class="slide">
+              <h3>mini-project-1-edx</h3>
+              <article class="description box">
+                <p>A landing page built using HTML and CSS.</p>
+                <a href="https://github.com/stellyes/mini-project-1-edx"
+                  >VISIT</a
+                >
+              </article>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!--The about section only has three elements, -->
+      <div id="about-section">
+        <article class="about-content">
+          <p>
+            My name is Ryan. I'm 24, currently living in California. I've always
+            loved tinkering with computers and was pretty glued to my parents'
+            old desktop rig back in 2007 when the internet was pretty new to me.
+            I have a diverse background that covers everything from art to
+            agriculture, music and more. I specialize in Backend Development,
+            and have over a year of professional experience working with the AWS
+            platform to develop scaleable and compact web applications.
+          </p>
+        </article>
+        <div
+          class="about-image"
+          alt="A picture of Ryan England"
+          title="This is me!"
+        ></div>
+
+        <aside class="about-title"><h2>ABOUT</h2></aside>
+      </div>
+      <!--Frame of contact form is non-functional, only to act as filler
+          for when contact queries are open to the public.-->
+      <div id="contact-me">
+        <aside><h2>CONTACT ME</h2></aside>
+        <form class="contact">
+          <div>
+            <label for="name">Name: </label>
+            <input type="text" name="name" />
+          </div>
+          <br />
+          <div>
+            <label for="email">Email:</label>
+            <input type="text" name="email" />
+          </div>
+        </form>
+        <p>I'll get back to you as soon as I can!</p>
+      </div>
+    </main>
+    <footer class="footer-card">
+      <div class="footer-content">
+        <p>Thanks for stopping by!</p>
+      </div>
+    </footer>
+  </body>
+</html>
