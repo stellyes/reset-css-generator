@@ -99,100 +99,93 @@ def buildTagList(tagList):
 
     return tag_list_string
 
-def main():
+# Gather relative filepath to HTML doc from user
+print()
+filePath = input("Please enter relative file path to HTML document you wish to create a reset.css file for: ")
 
-    # Gather relative filepath to HTML doc from user
-    print()
-    filePath = input("Please enter relative file path to HTML document you wish to create a reset.css file for: ")
+while not os.path.exists(filePath):
+    filePath = input("Invalid file path. Please try again: ")
 
-    while not os.path.exists(filePath):
-        filePath = input("Invalid file path. Please try again: ")
+with open(filePath) as doc:
+    soup = BeautifulSoup(doc, "html.parser")
 
-    with open(filePath) as doc:
-        soup = BeautifulSoup(doc, "html.parser")
+# Begin search for elements
+print("Succesfully loaded HTML document.")
+print("Generating reset.css document...")
 
-    # Begin search for elements
-    print("Succesfully loaded HTML document.")
-    print("Generating reset.css document...")
+# Grab all HTML tags from document
+tagList = []
+for tag in soup.find_all(True):
+    if tag.name not in tagList:
+        tagList.append(tag.name)
 
-    # Grab all HTML tags from document
-    tagList = []
-    for tag in soup.find_all(True):
-        if tag.name not in tagList:
-            tagList.append(tag.name)
+# Remove duplicate tags in list
+tagList = list(set(tagList))
 
-    # Remove duplicate tags in list
-    tagList = list(set(tagList))
+# Initialized empty arrays to store corresponding and present tags
+# from HTML document. line_height_compare and table_compare are boolean
+# values since there's only one value to compare against in their lists
+baseline_compare = []
+display_compare = []
+line_height_compare = False
+list_style_compare = []
+quote_compare = []
+table_compare = False
 
-    # Initialized empty arrays to store corresponding and present tags
-    # from HTML document. line_height_compare and table_compare are boolean
-    # values since there's only one value to compare against in their lists
-    baseline_compare = []
-    display_compare = []
-    line_height_compare = False
-    list_style_compare = []
-    quote_compare = []
-    table_compare = False
+# Building out css file by testing for tags in each
+# serction of the reference document
+for tag in tagList:
+    if tag in BASELINE_TAGS:
+        baseline_compare.append(tag)
 
-    # Building out css file by testing for tags in each
-    # serction of the reference document
-    for tag in tagList:
-        if tag in BASELINE_TAGS:
-            baseline_compare.append(tag)
-
-        if tag in DISPLAY_PROP_DEPRECATED_BROWSERS:
-            display_compare.append(tag)
-        
-        if tag in LINE_HEIGHT_TAGS:
-            line_height_compare = True
-        
-        if tag in LIST_STYLE_TAGS:
-            list_style_compare.append(tag)
-        
-        if tag in QUOTE_TAGS:
-            quote_compare.append(tag)
-        
-        if tag in TABLE_BORDER_TAGS:
-            table_compare = True
-
-    # Writing structured css to file
-    css_string = HEADER
-
-    if baseline_compare != []:
-        css_string += buildTagList(baseline_compare) + BASELINE_CSS + "\n\n"
-
-    if display_compare != []:
-        css_string += buildTagList(display_compare) + DISPLAY_CSS_DEPRECATED_BROWSERS + "\n\n"
+    if tag in DISPLAY_PROP_DEPRECATED_BROWSERS:
+        display_compare.append(tag)
     
-    if line_height_compare:
-        css_string += "body " + LINE_HEIGHT_CSS + "\n\n"
+    if tag in LINE_HEIGHT_TAGS:
+        line_height_compare = True
+    
+    if tag in LIST_STYLE_TAGS:
+        list_style_compare.append(tag)
+    
+    if tag in QUOTE_TAGS:
+        quote_compare.append(tag)
+    
+    if tag in TABLE_BORDER_TAGS:
+        table_compare = True
 
-    if quote_compare != []:
-        css_string += buildTagList(quote_compare) + QUOTE_CSS + "/n/n"
-        for tag in quote_compare:
-            if len(quote_compare) == 1:
-                css_string += quote_compare[0] + ":before, \n" + quote_compare[0] + ":after "
-            else:
-                css_string += quote_compare[0] + ":before, \n" + quote_compare[0] + ":after, \n " + \
-                            quote_compare[1] + ":before, \n" + quote_compare[0] + ":after "
-        css_string += QUOTE_PSEUDO_CSS
-        css_string += "\n\n"
+# Writing structured css to file
+css_string = HEADER
 
-    if table_compare:
-        css_string += "table "
-        css_string += TABLE_BORDER_CSS
+if baseline_compare != []:
+    css_string += buildTagList(baseline_compare) + BASELINE_CSS + "\n\n"
 
-    css_code = cssutils.parseString(css_string)
-    current_time = time.ctime().lower()
-    current_time = current_time.replace(" ", "_")
+if display_compare != []:
+    css_string += buildTagList(display_compare) + DISPLAY_CSS_DEPRECATED_BROWSERS + "\n\n"
 
-    with open("output/reset_" + current_time + ".css", "w") as css:
-        raw_css = str(css_code.cssText.decode('ascii')).replace(",", ",\n")
-        css.write(raw_css)
+if line_height_compare:
+    css_string += "body " + LINE_HEIGHT_CSS + "\n\n"
 
-    print("reset.css file generated! Please refer to reset.css file in the output  \
-           folder with the current date and time.")
+if quote_compare != []:
+    css_string += buildTagList(quote_compare) + QUOTE_CSS + "/n/n"
+    for tag in quote_compare:
+        if len(quote_compare) == 1:
+            css_string += quote_compare[0] + ":before, \n" + quote_compare[0] + ":after "
+        else:
+            css_string += quote_compare[0] + ":before, \n" + quote_compare[0] + ":after, \n " + \
+                        quote_compare[1] + ":before, \n" + quote_compare[0] + ":after "
+    css_string += QUOTE_PSEUDO_CSS
+    css_string += "\n\n"
 
+if table_compare:
+    css_string += "table "
+    css_string += TABLE_BORDER_CSS
 
-if __name__ == "__main__":
-    main()
+css_code = cssutils.parseString(css_string)
+current_time = time.ctime().lower()
+current_time = current_time.replace(" ", "_")
+
+with open("output/reset_" + current_time + ".css", "w") as css:
+    raw_css = str(css_code.cssText.decode('ascii')).replace(",", ",\n")
+    css.write(raw_css)
+
+print("reset.css file generated! Please refer to reset.css file in the output folder with the current date and time.")
