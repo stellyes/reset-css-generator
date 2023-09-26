@@ -3,15 +3,15 @@ import cssutils
 from bs4 import BeautifulSoup
 
 HEADER = '''
-    /*\n 
-        Script by Ryan England - Github: stellyes\n \
-        https://github.com/stellyes/reset-css-generator \n \
+/*
+    Script by Ryan England - Github: stellyes
+    https://github.com/stellyes/reset-css-generator
                 
-        \nTemplate for reset.css information: \n\
-        http://meyerweb.com/eric/tools/css/reset/\n \
-        v2.0 | 20110126\n \
-        License: none (public domain)\n \
-    */\n\n
+    Template for reset.css information:
+    http://meyerweb.com/eric/tools/css/reset/
+    v2.0 | 20110126
+    License: none (public domain)
+*/
 '''
 
 # The baseline tags to be modified by the BASELINE_CSS global
@@ -102,11 +102,10 @@ def main():
 
     # Gather relative filepath to HTML doc from user
     print()
-    filePath = os.path.abspath("../../02-challenges/web-resume/index.html")
-    #input("Please enter relative file path to HTML document you wish to create a reset.css file for: ")
+    filePath = input("Please enter relative file path to HTML document you wish to create a reset.css file for: ")
 
-    #while not os.path.exists(filePath):
-        #filePath = input("Invalid file path. Please try again: ")
+    while not os.path.exists(filePath):
+        filePath = input("Invalid file path. Please try again: ")
 
     with open(filePath) as doc:
         soup = BeautifulSoup(doc, "html.parser")
@@ -139,15 +138,20 @@ def main():
     for tag in tagList:
         if tag in BASELINE_TAGS:
             baseline_compare.append(tag)
-        elif tag in DISPLAY_PROP_DEPRECATED_BROWSERS:
+
+        if tag in DISPLAY_PROP_DEPRECATED_BROWSERS:
             display_compare.append(tag)
-        elif tag in LINE_HEIGHT_TAGS:
+        
+        if tag in LINE_HEIGHT_TAGS:
             line_height_compare = True
-        elif tag in LIST_STYLE_TAGS:
+        
+        if tag in LIST_STYLE_TAGS:
             list_style_compare.append(tag)
-        elif tag in QUOTE_TAGS:
+        
+        if tag in QUOTE_TAGS:
             quote_compare.append(tag)
-        elif tag in TABLE_BORDER_TAGS:
+        
+        if tag in TABLE_BORDER_TAGS:
             table_compare = True
 
     # Writing structured css to file
