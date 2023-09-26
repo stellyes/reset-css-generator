@@ -1,4 +1,5 @@
 import os
+import time
 import cssutils
 from bs4 import BeautifulSoup
 
@@ -182,10 +183,15 @@ def main():
         css_string += TABLE_BORDER_CSS
 
     css_code = cssutils.parseString(css_string)
-    with open("reset.css", "w") as css:
-        css.write(str(css_code.cssText.decode('ascii')))
+    current_time = time.ctime().lower()
+    current_time = current_time.replace(" ", "_")
 
-    print("reset.css file generated! Please refer to reset.css in this directory and copy into your document.")
+    with open("output/reset_" + current_time + ".css", "w") as css:
+        raw_css = str(css_code.cssText.decode('ascii')).replace(",", ",\n")
+        css.write(raw_css)
+
+    print("reset.css file generated! Please refer to reset.css file in the output  \
+           folder with the current date and time.")
 
 
 if __name__ == "__main__":
