@@ -93,7 +93,7 @@ def buildTagList(tagList):
     tag_list_string = ""
     for tag in tagList:
         if tag is not tagList[len(tagList) - 1]:
-            tag_list_string += tag + ",\n "
+            tag_list_string += tag + ",\n"
         else:
             tag_list_string += tag 
 
