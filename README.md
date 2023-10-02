@@ -10,6 +10,4 @@ Run `pip3 install -r requirements.txt` to ensure the necessary libraries are ins
 
 [![resetcssgif.gif](https://i.postimg.cc/XvmhmLjB/resetcssgif.gif)](https://postimg.cc/bG032Q2q)
 
-(It helps if you have some type of auto-parser in your environment to clean up some loose whitespace.)
-
 _Remember, why spend five minutes completing a task when you could spend five hours automating it! Safe travels_
